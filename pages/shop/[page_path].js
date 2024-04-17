@@ -8,6 +8,7 @@ import { Button,Card,TextField,Modal } from '@mui/material';
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import { MdOutlineDoneAll } from "react-icons/md";
+import { redirect } from 'next/navigation';
 
 const formRules = yup.object().shape({
     address:yup.string().required('This field is mandatory').min(16,'Minimum of 16 character required').max(10000,'Maximum of 10,000 characters'),
@@ -33,6 +34,10 @@ export async function getStaticPaths () {
 
 export const getStaticProps = async (context) => {
   const page_path = context.params.page_path
+
+  if (!page_path) {
+    redirect('/shop')
+  }
 
   const products = []
   const q = query(collection(firestoreDB,'products'),where('page_path','==',page_path))
